@@ -65,9 +65,20 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const FollowToggle = __webpack_require__(1)
+
+$( () => {
+  $('button.follow-toggle').each((idx, btn) => new FollowToggle(btn, {}) );
+});
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports) {
 
-throw new Error("Module parse failed: Unexpected token (4:4)\nYou may need an appropriate loader to handle this file type.\n| \n| \n| and define a document ready callback below.\n| The callback should call your constructor once for each button.follow-toggle element.\n| You can use jQuery#each for this, but beware:");
+throw new Error("Module parse failed: Unexpected token (40:8)\nYou may need an appropriate loader to handle this file type.\n|       $.ajax({\n|         method: \"DELETE\"\n|         url: \"/users\"\n|         dataType: \"json\"\n|       })");
 
 /***/ })
 /******/ ]);
