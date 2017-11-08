@@ -76,9 +76,69 @@ $( () => {
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const APIUtil = __webpack_require__(2)
+
+class FollowToggle {
+  constructor($el, options) {
+    this.$el = $el
+
+    this.render();
+    this.handleClick();
+
+    this.userId = this.$el.data('user-id') || options.userId;
+    this.followState = this.$el.data('initial-follow-state') || options.followState;
+  }
+
+  render() {
+    if (follow()) {
+      return "Follow!"
+    } else if (unfollow()) {
+      return "Unfollow!"
+    }
+  }
+
+  follow() {
+    this.followState === "unfollowed";
+  }
+
+  unfollow() {
+    this.followState === "followed";
+  }
+
+  handleClick(e) {
+    const followToggle = this;
+    e.preventDefault();
+
+    if (unfollow()) {
+      this.render();
+      APIUtil.unfollowUser(this.userId).then(() => {
+        followToggle.followState = 'unfollowed';
+        followToggle.render();
+      });
+    }
+    else if (follow()) {
+      this.render();
+      APIUtil.followUser(this.userId).then(() => {
+        followToggle.render();
+      });
+    }
+  }
+}
+
+
+
+
+
+module.exports = FollowToggle;
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports) {
 
-throw new Error("Module parse failed: Unexpected token (40:8)\nYou may need an appropriate loader to handle this file type.\n|       $.ajax({\n|         method: \"DELETE\"\n|         url: \"/users\"\n|         dataType: \"json\"\n|       })");
+throw new Error("Module parse failed: Unexpected token (1:14)\nYou may need an appropriate loader to handle this file type.\n| const APIUtil {\n| \n|   followUser: id => APIUtil.changeFollowStatus(id, 'POST'),");
 
 /***/ })
 /******/ ]);
