@@ -60,31 +60,15 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const FollowToggle = __webpack_require__(1)
+const APIUtil = __webpack_require__(1);
 const UsersSearch = __webpack_require__(3)
-// const APIUtil = require('./api_util')
-
-$( () => {
-  $('button.follow-toggle').each((idx, btn) => new FollowToggle(btn, {}) );
-  $('nav.users-search').each((idx, nav) => new UsersSearch(nav, {}) );
-});
-
-
-module.exports = FollowToggle;
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const APIUtil = __webpack_require__(2)
 
 class FollowToggle {
   constructor(el, options) {
@@ -146,7 +130,7 @@ module.exports = FollowToggle;
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports) {
 
 const APIUtil = {
@@ -162,46 +146,80 @@ const APIUtil = {
     })
   ),
 
-  searchUsers: query => {
-    $.ajax({
-      url:`/users/search`,
-      dataType: 'json',
-      method: 'GET',
-      data: { query }
-    })
-  }
+  searchUsers: query => (
+      $.ajax({
+        url: '/users/search',
+        dataType: 'json',
+        method: 'GET',
+        data: { query }
+      })
+    )
 };
 
 module.exports = APIUtil;
 
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const FollowToggle = __webpack_require__(0);
+const UsersSearch = __webpack_require__(3);
+// const APIUtil = require('./api_util')
+
+$( () => {
+  $('button.follow-toggle').each((idx, btn) => new FollowToggle(btn, {}) );
+  $('nav.users-search').each((idx, search) => new UsersSearch(search) );
+});
+
+
+/***/ }),
 /* 3 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+const APIUtil = __webpack_require__(1);
+const FollowToggle = __webpack_require__(0);
 
 class UsersSearch {
+
   constructor(el) {
     this.$el = $(el);
     this.$input = this.$el.find('input[name=username]');
     this.$ul = this.$el.find('.users')
+
+    this.$input.on('input', this.handleInput.bind(this));
   }
 
   handleInput(event) {
-    event.preventDefault();
+    if (this.$input.val() === '') {
+      this.renderResults([]);
+      return;
+    }
+    APIUtil.searchUsers(this.$input.val()).then(users => this.renderResults(users));
+  }
 
-    APIUtil.searchUsers(this.$input.val())
+
+  renderResults(users) {
+    this.$ul.empty();
+
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+
+      let $a = $('<a></a>');
+      $a.text(`@${user.username}`);
+      $a.attr('href',`/users/${user.id}`);
+
+      const $li = $('<li></li>');
+
+      $li.append($a);
+      this.$ul.append($li);
+
+    }
   }
 }
 
 
-// Write a UsersSearch#handleInput handler.
-// On each input event, call APIUtil.searchUsers,
-// sending the input's val as the query parameter.
-
-// Write an APIUtil#searchUsers(queryVal, success)
-// to make a request to /users/search.
-// You can send query parameters along with
-// an $.ajax call through the data. Don't forget to set dataType!
+module.exports = UsersSearch;
 
 
 /***/ })
