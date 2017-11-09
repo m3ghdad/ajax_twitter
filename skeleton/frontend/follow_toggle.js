@@ -56,14 +56,4 @@ class FollowToggle {
   }
 }
 
-
-// follow() {
-//   this.followState === "unfollowed";
-// }
-//
-// unfollow() {
-//   this.followState === "followed";
-// }
-
-
 module.exports = FollowToggle;
